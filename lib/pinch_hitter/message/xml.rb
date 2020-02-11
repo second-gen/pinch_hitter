@@ -2,22 +2,26 @@ require 'rexml/document'
 require 'rexml/xpath'
 
 module PinchHitter::Message
-  module Xml
-    def xml_message(file, overrides={})
-      xml = load_xml_file(file)
+  class Xml < ContentType
+
+    def self.valid_message?(string)
+      string.start_with?(/\s*<(\?xml|soap)/i)
+    end
+
+    def self.format_message(message, overrides={})
+      xml = REXML::Document.new message
       overrides.each do |key, text|
         replace_xml(xml, key, text)
       end
       xml.to_s
     end
 
-    private
-    def load_xml_file(filename)
-      file = File.new filename
-      REXML::Document.new file
+    def self.header_string
+      "text/xml"
     end
 
-    def replace_xml(xml, key, text)
+    private
+    def self.replace_xml(xml, key, text)
       parts = key.split('@')
       tag = find_node xml, parts.first
 
@@ -30,7 +34,7 @@ module PinchHitter::Message
       end
     end
 
-    def find_node(xml, tag)
+    def self.find_node(xml, tag)
       REXML::XPath.first(xml, "//#{tag}")
     end
   end

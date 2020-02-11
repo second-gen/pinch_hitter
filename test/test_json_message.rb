@@ -4,21 +4,7 @@ require 'minitest/autorun'
 
 class TestJsonMessage < MiniTest::Test
 
-  def setup
-   File.open(filename, 'w') {|f| f.write(our_message) }
-   @test = Object.new
-   @test.extend(PinchHitter::Message::Json)
-  end
-
-  def teardown
-    File.delete filename
-  end
-
-  def filename
-    "minitest_message.json"
-  end
-
-  def our_message
+  def json_message
 %Q{{"menu": {
   "id": "file",
   "value": "File",
@@ -32,12 +18,12 @@ class TestJsonMessage < MiniTest::Test
 }
   end
 
-  def test_message_no_overrides 
-    assert_equal our_message, @test.json_message(filename)
+  def test_message_no_overrides
+    assert_equal json_message, PinchHitter::Message::Json.format_message(json_message)
   end
 
   def test_message_with_overrides
-    json = @test.json_message(filename, {"menuitem" => 'WhatsUpDoc?' })
+    json = PinchHitter::Message::Json.format_message(json_message, { "menuitem" => 'WhatsUpDoc?' })
     assert json.include? "WhatsUpDoc?"
   end
 end

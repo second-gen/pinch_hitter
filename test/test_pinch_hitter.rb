@@ -13,7 +13,7 @@ class TestPinchHitter < MiniTest::Test
    @test.session=session
    @test.reset
    @test.messages_directory = File.dirname('.')
-   File.open(message_file, 'w') {|f| f.write(message_content) }
+   File.open(message_file, 'w') { |f| f.write(message_content) }
   end
 
   def teardown
@@ -21,7 +21,7 @@ class TestPinchHitter < MiniTest::Test
   end
 
   def message_file
-    "fizzbuzz"
+    "fizzbuzz.txt"
   end
 
   def message_content
@@ -53,12 +53,10 @@ class TestPinchHitter < MiniTest::Test
   end
 
   def test_prime_with_missing_message
-    begin
-      @test.prime '/foo', :non_existent_file
-    rescue => e
-      assert_match "Could not find message", e.message
-      assert_match :non_existent_file.to_s, e.message
-    end
+    @test.prime '/foo', :non_existent_file
+  rescue => e
+    assert_match "Could not find message", e.message
+    assert_match :non_existent_file.to_s, e.message
   end
 
   def test_store

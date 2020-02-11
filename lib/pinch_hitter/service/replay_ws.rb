@@ -9,7 +9,6 @@ require 'pinch_hitter/message/content_type'
 
 module PinchHitter::Service
   class ReplayWs < Sinatra::Base
-    include PinchHitter::Message::ContentType
 
     register Sinatra::CrossOrigin
 
@@ -88,7 +87,7 @@ module PinchHitter::Service
       @@recorder.record(endpoint, request)
       message = @@handlers.respond_to(endpoint, body, request, response)
       if message.is_a? String
-        content_type determine_content_type message
+        content_type PinchHitter::Message::ContentType.determine_content_type_by_message message
         puts "No message found for #{endpoint}" unless message
       end
       message

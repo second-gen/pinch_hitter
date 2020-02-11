@@ -26,6 +26,11 @@ Feature:  Test WS replay
     When I query the glossary
     Then I see a definition with a "ID" of "FOO"
 
+  Scenario:  Replay with plain text
+    Given I want to retrieve a text document
+    When I retrieve the text document
+    Then I see the text document
+
   Scenario Outline:  Replay with custom module
     Given I want to do some fancy processing
     When I query my service with <request>

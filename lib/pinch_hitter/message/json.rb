@@ -1,27 +1,9 @@
 module PinchHitter::Message
-  module Json
-    def json_message(file, overrides={})
-      json_file = load_json_file file
-      replace_json json_file, overrides
-    end
+  class Json < ContentType
 
-    def valid_json?(json)
-      begin
-        JSON.parse json
-        return true
-      rescue
-        return false
-      end
-    end
-
-  private
-    def load_json_file(filename)
-      IO.read filename
-    end
-
-    def replace_json(content, overrides={})
-      return content if overrides.empty?
-      doc = JSON.parse(content)
+    def self.format_message(message, overrides={})
+      return message if overrides.empty?
+      doc = JSON.parse(message)
       overrides.each do |key, value|
         hash = find_nested_hash(doc, key)
         if has_key(hash, key)
@@ -31,7 +13,19 @@ module PinchHitter::Message
       doc.to_json
     end
 
-    def find_nested_hash(parent, key)
+    def self.valid_message?(string)
+      JSON.parse string
+      return true
+    rescue
+      return false
+    end
+
+    def self.header_string
+      "application/json"
+    end
+
+    private
+    def self.find_nested_hash(parent, key)
       return parent if has_key(parent, key)
       return nil unless parent.respond_to? :each
 
@@ -42,7 +36,7 @@ module PinchHitter::Message
       found
     end
 
-    def has_key(hash, key)
+    def self.has_key(hash, key)
       hash.respond_to?(:key?) && hash.key?(key)
     end
 
