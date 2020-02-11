@@ -2,7 +2,7 @@ module PinchHitter::Message
   class Html < ContentType
 
     def self.valid_message?(string)
-      string.start_with?(/(\s|<!doctype[^>]*>)*<html\b/i)
+      string =~ /\A(\s|<!doctype[^>]*>)*<html\b/i
     end
 
     def self.format_message(message, overrides={})

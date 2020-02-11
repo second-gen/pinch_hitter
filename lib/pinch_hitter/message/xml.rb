@@ -5,7 +5,7 @@ module PinchHitter::Message
   class Xml < ContentType
 
     def self.valid_message?(string)
-      string.start_with?(/\s*<(\?xml|soap)/i)
+      string =~ /\A\s*<(\?xml|soap)/i
     end
 
     def self.format_message(message, overrides={})
