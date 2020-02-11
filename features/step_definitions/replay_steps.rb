@@ -44,6 +44,19 @@ Then /^I see a definition with a "(.*?)" of "(.*?)"$/ do |key, value|
   @response.body.to_s.should == messages.load(:glossary, { key => value }).squish
 end
 
+Given /^I want to view a web page$/ do
+  mock.prime "/page", :page
+end
+
+When /^I visit the web address$/ do
+  @response = app.get "/page"
+end
+
+Then /^I see the web page$/ do
+  @response.body.to_s.should == messages.load(:page).squish
+  @response.header["Content-Type"].should == "text/html;charset=utf-8"
+end
+
 Given /^I want to retrieve a text document$/ do
   mock.prime "/document", :document
 end

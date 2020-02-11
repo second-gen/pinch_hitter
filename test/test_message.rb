@@ -7,6 +7,7 @@ class TestMessage < MiniTest::Test
   def setup
    File.open(xml_file,  'w') { |f| f.write(xml_message) }
    File.open(json_file, 'w') { |f| f.write(json_message) }
+   File.open(html_file, 'w') { |f| f.write(html_message) }
 
    @messages = PinchHitter::Message::MessageStore.new File.dirname('.')
   end
@@ -14,6 +15,7 @@ class TestMessage < MiniTest::Test
   def teardown
     File.delete xml_file
     File.delete json_file
+    File.delete html_file
   end
 
   def xml_file
@@ -22,6 +24,10 @@ class TestMessage < MiniTest::Test
 
   def json_file
     "minitest.json"
+  end
+
+  def html_file
+    "minitest.html"
   end
 
   def xml_message
@@ -34,6 +40,15 @@ class TestMessage < MiniTest::Test
 %Q{{
   "one": "two",
   "A": "B" }
+}
+  end
+
+  def html_message
+%Q{<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>Hi there!</body>
+</html>
 }
   end
 
@@ -61,6 +76,10 @@ class TestMessage < MiniTest::Test
 
   def test_content_type_determines_json
     assert_equal "application/json", PinchHitter::Message::ContentType.determine_content_type_by_message(json_message)
+  end
+
+  def test_content_type_determines_html
+    assert_equal "text/html", PinchHitter::Message::ContentType.determine_content_type_by_message(html_message)
   end
 
   def test_content_type_defaults_to_plain_text

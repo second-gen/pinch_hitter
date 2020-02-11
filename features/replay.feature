@@ -26,6 +26,11 @@ Feature:  Test WS replay
     When I query the glossary
     Then I see a definition with a "ID" of "FOO"
 
+  Scenario:  Replay with HTML
+    Given I want to view a web page
+    When I visit the web address
+    Then I see the web page
+
   Scenario:  Replay with plain text
     Given I want to retrieve a text document
     When I retrieve the text document

@@ -44,5 +44,6 @@ module PinchHitter::Message
 end
 
 require 'pinch_hitter/message/json'
+require 'pinch_hitter/message/html'
 require 'pinch_hitter/message/xml'
 require 'pinch_hitter/message/plain_text'
