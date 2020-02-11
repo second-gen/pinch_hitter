@@ -33,6 +33,20 @@ class TestService < MiniTest::Test
     assert_equal 'application/json', last_response.content_type
   end
 
+  def test_result_should_be_plain_text
+    post "/store", text_message
+    post "/respond", ''
+
+    assert_equal 'text/plain;charset=utf-8', last_response.content_type
+  end
+
+  def test_result_should_be_html
+    post "/store", html_message
+    post "/respond", ''
+
+    assert_equal 'text/html;charset=utf-8', last_response.content_type
+  end
+
   def test_reset
     post "/reset", ''
     assert_equal 200, last_response.status

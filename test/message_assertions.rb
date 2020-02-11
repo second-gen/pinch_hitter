@@ -15,6 +15,17 @@ module MessageAssertions
     }}~
   end
 
+  def html_message
+   %Q{<!doctype html>
+<html>
+  <body>Hi hi!</body>
+</html>}
+  end
+
+  def text_message
+   %Q{Howdie doodie neighbor?}
+  end
+
   def assert_received(message)
     assert_equal message.gsub(/\n\s*/, ''), last_response.body.strip
   end

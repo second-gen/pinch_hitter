@@ -6,7 +6,6 @@ require "net/http"
 
 module PinchHitter
   include PinchHitter::Service::Runner
-  include PinchHitter::Message::ContentType
   attr_accessor :message_store
 
   def messages_directory=(dir)
@@ -30,7 +29,7 @@ module PinchHitter
   end
 
   def store(endpoint, content)
-    content_type = determine_content_type(content)
+    content_type = Message::ContentType.determine_content_type_by_message(content)
     @session.post "/store?endpoint=#{endpoint}", content, 'Content-Type' => content_type
   end
 

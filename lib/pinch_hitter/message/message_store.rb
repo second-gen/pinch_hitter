@@ -1,12 +1,7 @@
-require 'pinch_hitter/message/xml'
-require 'pinch_hitter/message/json'
 require 'pinch_hitter/message/content_type'
 
 module PinchHitter::Message
-    class MessageStore
-    include Xml
-    include Json
-    include ContentType
+  class MessageStore
 
     attr_accessor :message_directory
 
@@ -16,11 +11,11 @@ module PinchHitter::Message
 
     def load(file, overrides={})
       filename = find_filename file
-      if filename =~ /xml$/
-        xml_message filename, overrides
-      else
-        json_message filename, overrides
-      end
+      file_extension = filename[/(?<=\.)[^.]+$/]
+      fail "Filename must have an extension to indicate type of response (#{filename})" if file_extension.nil?
+      content_type = ContentType.determine_content_type_by_extension file_extension
+      fail "Unsupported file type #{file_extension.inspect}. Supported types are: #{ContentType.registered_content_types.map(&:extension)}" if content_type.nil?
+      content_type.format_message File.read(filename), overrides
     end
 
     def find_filename(file)

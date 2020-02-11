@@ -9,7 +9,6 @@ require 'pinch_hitter/message/content_type'
 
 module PinchHitter::Service
   class ReplayWs < Sinatra::Base
-    include PinchHitter::Message::ContentType
 
     register Sinatra::CrossOrigin
 
@@ -89,7 +88,7 @@ module PinchHitter::Service
       if @@handlers.handler_for?(endpoint)
         message = @@handlers.respond_to(endpoint, body, request, response)
         if message
-          content_type determine_content_type message
+          content_type PinchHitter::Message::ContentType.determine_content_type_by_message message
           message
         else
           status 404

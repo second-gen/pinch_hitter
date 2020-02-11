@@ -16,6 +16,7 @@ end
 
 Then /^I see a car reservation$/ do
   @response.body.to_s.should == messages.load(:car_rental).squish
+  @response.header["Content-Type"].should == "text/xml;charset=utf-8"
 end
 
 Given /^I want a car rental with a "(.*?)" of "(.*?)"$/ do |tag, text|
@@ -41,6 +42,7 @@ end
 
 Then /^I see a definition$/ do
   @response.body.to_s.should == messages.load(:glossary).squish
+  @response.header["Content-Type"].should == "application/json"
 end
 
 Given /^I want to lookup a definition with a "(.*?)" of "(.*?)"$/ do |key, value|
@@ -50,6 +52,33 @@ end
 Then /^I see a definition with a "(.*?)" of "(.*?)"$/ do |key, value|
   @response.body.to_s.should == messages.load(:glossary, { key => value }).squish
 end
+
+Given /^I want to view a web page$/ do
+  mock.prime "/page", :page
+end
+
+When /^I visit the web address$/ do
+  @response = app.get "/page"
+end
+
+Then /^I see the web page$/ do
+  @response.body.to_s.should == messages.load(:page).squish
+  @response.header["Content-Type"].should == "text/html;charset=utf-8"
+end
+
+Given /^I want to retrieve a text document$/ do
+  mock.prime "/document", :document
+end
+
+When /^I retrieve the text document$/ do
+  @response = app.get "/document"
+end
+
+Then /^I see the text document$/ do
+  @response.body.to_s.should == messages.load(:document).squish
+  @response.header["Content-Type"].should == "text/plain;charset=utf-8"
+end
+
 
 Given(/^I want to do some fancy processing$/) do
   mock.register_module('/service', XmlParser)
